@@ -13,3 +13,5 @@ calcScore:
 Reads the output of randomLED & movementOfLED and adds 1 to a counter everytime they are identical(i.e. both light up the 3rd LED, which means the snake has eaten the rabbit)
 after that, will attempt to "turn off" the randomLED output.
 Counter resets after score of 9.
+
+git remote add origin https://github.com/beazt123/DSL-Verilog-Lab.git
