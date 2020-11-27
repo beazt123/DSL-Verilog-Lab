@@ -80,10 +80,10 @@ module labkit(
 	
 	calcScore(ledMovementWire, randomLEDWire, score, feedback_loop);
 	
-	sevenSegCounter(score, seg, dig);
+	sevenSegCounter2(clk_100mhz, score, seg, dig);
 	
 	assign led[7:0] = ledMovementWire | randomLEDWire; 
- 
+	assign dig[3:0] = dig;
 
 	
 	

@@ -23,7 +23,7 @@ This module takes in a 4-bit input and outputs the controls to a 1-digit 7-segme
 // Additional Comments: 
 //
 
-module sevenSegCounter(
+module sevenSegCounter2(
     input [3:0] switch,
     output [7:0] seg,   
     output [3:0] dig   //selects digits 0-3, ACTIVE LOW
