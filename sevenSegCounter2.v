@@ -23,9 +23,9 @@ This module takes in a 4-bit input and outputs the controls to a 1-digit 7-segme
 // Additional Comments: 
 //
 
-module sevenSegCounter2(
+module sevenSegCounter(
 	 input clk,
-    input [15:0] score,
+    input [15:0] displayed_number,
     output [7:0] seg,
 	 output [3:0] dig
     );
@@ -36,7 +36,6 @@ module sevenSegCounter2(
 	reg [31:0] r_CNT_2ms = 0;
 	reg [1:0] TOGGLE_2ms = 2'b00;  //used for multiplexing 4 seven segments
 	
-	reg [15:0] displayed_number;    //counting number to be displayed
    reg [3:0] segment_pattern;
 	reg [3:0] dig_reg;  
    reg [7:0] seg_reg;
@@ -60,7 +59,6 @@ module sevenSegCounter2(
 	
 	always @(TOGGLE_2ms)
    begin
-		  displayed_number = score;
         case(TOGGLE_2ms)
         2'b00: begin
 					dig_reg = 4'b0111; //activate first seven segment and deactivate other 3 seven segments

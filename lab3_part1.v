@@ -69,21 +69,35 @@ module labkit(
 	
 	wire[7:0] ledMovementWire;
 	wire[7:0] randomLEDWire;
-	wire[7:0] randomLEDWire2;
 	wire[3:0] score;
 	wire feedback_loop;
+	wire led_en;
+	
+	reg [1:0] btnL_shift;
+	always @(posedge clk_100mhz)
+		btnL_shift <= {btnL_shift,btn_left};
+	wire btnL_rise = btnL_shift == 2'b01;
+	
+	reg [1:0] btnR_shift;
+	always @(posedge clk_100mhz)
+		btnR_shift <= {btnR_shift,btn_right};
+	wire btnR_rise = btnR_shift == 2'b01;
+	
+	reg [1:0] btnU_shift;
+	always @(posedge clk_100mhz)
+		btnU_shift <= {btnU_shift,btn_up};
+	wire btnU_rise = btnU_shift == 2'b01;
 	
 	
-	movementOfLED(clk_100mhz, btn_left, btn_right, ledMovementWire);
+	movementOfLED(clk_100mhz, btnL_rise, btnR_rise, ledMovementWire);
 	
-	randomLED(clk_100mhz, btn_up, feedback_loop, ledMovementWire, randomLEDWire);
+	randomLED(clk_100mhz, btnU_rise, feedback_loop, ledMovementWire, randomLEDWire);
 	
-	calcScore(ledMovementWire, randomLEDWire, score, feedback_loop);
+	calcScore(clk_100mhz, ledMovementWire, randomLEDWire,score, feedback_loop);
 	
-	sevenSegCounter2(clk_100mhz, score, seg, dig);
+	sevenSegCounter(clk_100mhz, score, seg, dig);
 	
 	assign led[7:0] = ledMovementWire | randomLEDWire; 
-	assign dig[3:0] = dig;
 
 	
 	

@@ -30,17 +30,18 @@ module movementOfLED(
 		output[7:0] module_output
     );
 	 integer module_clk = 0;
-	 parameter delay_time = 23000000;
+	 parameter delay_time = 15000000;
 	 reg[7:0] led_outs = 8'b00000001;
+	 reg btn_en = 1;
 	 
 	// Lateral Movement
 	 always@ (posedge clk_100mhz)
-		 begin
-			if (module_clk > delay_time)
-				begin
+		begin
+			if ((btn_left || btn_right) && btn_en == 1)
+				begin 
+					btn_en = 0;
 					if (btn_left)
 						begin
-							module_clk = 0;
 							case (led_outs)
 								8'b00000001: led_outs <= 8'b00000010;
 								8'b00000010: led_outs <= 8'b00000100;
@@ -54,7 +55,6 @@ module movementOfLED(
 						end
 					if (btn_right)
 						begin
-							module_clk = 0;
 							case (led_outs)
 								8'b00000100: led_outs <= 8'b00000010;
 								8'b00001000: led_outs <= 8'b00000100;
@@ -67,8 +67,15 @@ module movementOfLED(
 							endcase
 						end
 				end
-			else
-				module_clk = module_clk + 1;
-		 end  
+			if (btn_en == 0)
+				begin
+				 module_clk = module_clk + 1;
+				 if (module_clk > delay_time)
+					begin
+						module_clk = 0;
+						btn_en = 1;
+					end
+				end
+		end
 	assign module_output = led_outs;
 endmodule

@@ -25,31 +25,44 @@ When that happens, attempts to zero the randomLED register, but as of now doesn'
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module calcScore(input [7:0] var1,
+module calcScore( input clk,
+						input [7:0] var1,
 						input [7:0] var2,
 						output [15:0] score,
 						output calScore_clear
     );
-	 integer counter = 0;
-	 reg[15:0] counter_score = 0;
 	 
-	 reg calScore_reg = 0;
+	 reg [15:0] counter = 0;
+	 reg calScore_reg = 0; 
+	 reg cal_en = 1; 
+	 integer module_clk = 0;
+	 parameter delay_time = 1500000;
 	 
 	 always @ (var1)
 		begin
-			if (var1 == var2 && var1[7:0] != 8'b00000000 && var2[7:0] != 8'b00000000)
-				begin
-				   calScore_reg = 1;
-					counter = counter + 1;
-					if (counter > 9)
-						counter = 0;	
+			if (cal_en == 1)
+				begin 
+					if (var1 == var2 && var1[7:0] != 8'b00000000 && var2[7:0] != 8'b00000000)
+						begin
+							cal_en = 0;
+							calScore_reg = 1;
+							counter = counter + 1;
+							if (counter > 9)
+								counter = 0;
+						end 
 				end
-			else 
-			begin 
-				calScore_reg = 0;
-			end
+			if (cal_en == 0)
+				begin
+				 module_clk = module_clk + 1;
+				 if (module_clk > delay_time)
+					begin
+						module_clk = 0;
+						cal_en = 1;
+						calScore_reg = 0;
+					end
+				end
 		end
 
-	assign score = counter_score;
+	assign score = counter;
 	assign calScore_clear = calScore_reg;
 endmodule
